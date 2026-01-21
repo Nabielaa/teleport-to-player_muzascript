@@ -1,0 +1,205 @@
+--====================================
+-- MUZASCRIPT | HIDER TELEPORT
+-- FULL FIX • UI BAR NOT EMPTY
+-- Draggable • Scroll Player
+--====================================
+
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+--====================================
+-- NOTIFICATION EXECUTE
+--====================================
+pcall(function()
+	StarterGui:SetCore("SendNotification",{
+		Title = "MuzaScript",
+		Text = "Teleport",
+		Duration = 3
+	})
+end)
+
+-- Destroy old gui
+pcall(function()
+	PlayerGui:FindFirstChild("MuzaTeleportUI"):Destroy()
+end)
+
+--====================================
+-- SCREEN GUI
+--====================================
+local gui = Instance.new("ScreenGui")
+gui.Name = "MuzaTeleportUI"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Parent = PlayerGui
+
+--====================================
+-- MAIN FRAME
+--====================================
+local main = Instance.new("Frame")
+main.Parent = gui
+main.Size = UDim2.new(0,420,0,300)
+main.Position = UDim2.new(0.5,-210,0.5,-150)
+main.BackgroundColor3 = Color3.fromRGB(18,18,18)
+main.BorderSizePixel = 0
+main.Active = true
+main.Draggable = true
+
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,10)
+
+--====================================
+-- TOP BAR (FIXED)
+--====================================
+local top = Instance.new("Frame")
+top.Parent = main
+top.Size = UDim2.new(1,0,0,40)
+top.Position = UDim2.new(0,0,0,0)
+top.BackgroundColor3 = Color3.fromRGB(28,28,28)
+top.BorderSizePixel = 0
+
+local topCorner = Instance.new("UICorner", top)
+topCorner.CornerRadius = UDim.new(0,10)
+
+local title = Instance.new("TextLabel")
+title.Parent = top
+title.BackgroundTransparency = 1
+title.Size = UDim2.new(1,-100,1,0)
+title.Position = UDim2.new(0,10,0,0)
+title.Text = "MUZASCRIPT | TELEPORT"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 14
+title.TextColor3 = Color3.new(1,1,1)
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Minimize
+local mini = Instance.new("TextButton")
+mini.Parent = top
+mini.Size = UDim2.new(0,30,0,30)
+mini.Position = UDim2.new(1,-70,0,5)
+mini.Text = "-"
+mini.Font = Enum.Font.GothamBold
+mini.TextSize = 22
+mini.BackgroundColor3 = Color3.fromRGB(45,45,45)
+mini.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", mini).CornerRadius = UDim.new(1,0)
+
+-- Close
+local close = Instance.new("TextButton")
+close.Parent = top
+close.Size = UDim2.new(0,30,0,30)
+close.Position = UDim2.new(1,-35,0,5)
+close.Text = "X"
+close.Font = Enum.Font.GothamBold
+close.TextSize = 14
+close.BackgroundColor3 = Color3.fromRGB(170,50,50)
+close.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
+
+--====================================
+-- PLAYER LIST
+--====================================
+local list = Instance.new("ScrollingFrame")
+list.Parent = main
+list.Position = UDim2.new(0,10,0,50)
+list.Size = UDim2.new(1,-20,1,-90)
+list.ScrollBarThickness = 4
+list.CanvasSize = UDim2.new(0,0,0,0)
+list.AutomaticCanvasSize = Enum.AutomaticSize.Y
+list.BackgroundTransparency = 1
+
+local layout = Instance.new("UIListLayout", list)
+layout.Padding = UDim.new(0,8)
+
+--====================================
+-- FOOTER
+--====================================
+local footer = Instance.new("TextLabel")
+footer.Parent = main
+footer.Size = UDim2.new(1,0,0,25)
+footer.Position = UDim2.new(0,0,1,-25)
+footer.BackgroundTransparency = 1
+footer.Text = "muzascript hider teleport | muzascript"
+footer.Font = Enum.Font.Gotham
+footer.TextSize = 11
+footer.TextColor3 = Color3.fromRGB(150,150,150)
+
+--====================================
+-- CREATE PLAYER BUTTON
+--====================================
+local function addPlayer(plr)
+	if plr == LocalPlayer then return end
+
+	local item = Instance.new("Frame")
+	item.Size = UDim2.new(1,0,0,40)
+	item.BackgroundColor3 = Color3.fromRGB(32,32,32)
+	item.BorderSizePixel = 0
+	item.Parent = list
+	Instance.new("UICorner", item).CornerRadius = UDim.new(0,8)
+
+	local name = Instance.new("TextLabel")
+	name.Parent = item
+	name.BackgroundTransparency = 1
+	name.Size = UDim2.new(1,-90,1,0)
+	name.Position = UDim2.new(0,10,0,0)
+	name.Text = plr.Name
+	name.Font = Enum.Font.Gotham
+	name.TextSize = 13
+	name.TextColor3 = Color3.new(1,1,1)
+	name.TextXAlignment = Enum.TextXAlignment.Left
+
+	local tp = Instance.new("TextButton")
+	tp.Parent = item
+	tp.Size = UDim2.new(0,70,0,26)
+	tp.Position = UDim2.new(1,-80,0.5,-13)
+	tp.Text = "Teleport"
+	tp.Font = Enum.Font.GothamBold
+	tp.TextSize = 12
+	tp.BackgroundColor3 = Color3.fromRGB(70,130,255)
+	tp.TextColor3 = Color3.new(1,1,1)
+	Instance.new("UICorner", tp).CornerRadius = UDim.new(0,6)
+
+	tp.MouseButton1Click:Connect(function()
+		local char = LocalPlayer.Character
+		if char and char:FindFirstChild("HumanoidRootPart") then
+			if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+				char.HumanoidRootPart.CFrame =
+					plr.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+			end
+		end
+	end)
+end
+
+--====================================
+-- LOAD PLAYERS
+--====================================
+for _,p in ipairs(Players:GetPlayers()) do
+	addPlayer(p)
+end
+
+Players.PlayerAdded:Connect(addPlayer)
+
+Players.PlayerRemoving:Connect(function(plr)
+	for _,v in ipairs(list:GetChildren()) do
+		if v:IsA("Frame") and v:FindFirstChildOfClass("TextLabel") then
+			if v.TextLabel.Text == plr.Name then
+				v:Destroy()
+			end
+		end
+	end
+end)
+
+--====================================
+-- BUTTON LOGIC
+--====================================
+local minimized = false
+mini.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	list.Visible = not minimized
+	footer.Visible = not minimized
+	main.Size = minimized and UDim2.new(0,420,0,40) or UDim2.new(0,420,0,300)
+end)
+
+close.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
